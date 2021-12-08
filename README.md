@@ -180,6 +180,9 @@ Website that allows users to show and sell their products online by allowing oth
       When: The user clicks on the add button.
 
       Then: A form will be shown to the user with the item's details and submit it so the item will be added successfully.
-
       
-   
+---
+
+## DataBase Digram:
+
+![database](https://i.ibb.co/Q6yDZ01/database.png)
