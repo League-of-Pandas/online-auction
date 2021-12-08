@@ -183,6 +183,12 @@ Website that allows users to show and sell their products online by allowing oth
       
 ---
 
+## Domain Modeling:
+
+![Domain Modeling](https://i.ibb.co/pzg0sWk/Domain-Modeling.png)
+
+---
+
 ## DataBase Digram:
 
 ![database](https://i.ibb.co/Q6yDZ01/database.png)
