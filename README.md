@@ -20,6 +20,9 @@ Website that allows users to show and sell their products online by allowing oth
 
 [Figma](https://www.figma.com/file/VtVVKm623TA3aM68s7CbvO/Untitled?node-id=0%3A1)
 
+## Trello Board
+[trello](https://trello.com/b/z8WzusTp/online-auctions)
+
 ## User Stories
 
 1. As a user I want to have the ability to register and login to the website so that I can start bidding on items.
