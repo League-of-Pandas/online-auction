@@ -1,12 +1,34 @@
 from pathlib import Path
 from datetime import timedelta
+import environ
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+env = environ.Env(
+    DEBUG=(bool, False),
+    ENVIRONMENT=(str, "PRODUCTION"),
+    ALLOW_ALL_ORIGINS=(bool, False),
+    ALLOWED_HOSTS=(list, []),
+    ALLOWED_ORIGINS=(list, []),
+    DATABASE_ENGINE=(str, "django.db.backends.sqlite3"),
+    DATABASE_NAME=(str, BASE_DIR / "db.sqlite3"),
+    DATABASE_USER=(str, ""),
+    DATABASE_PASSWORD=(str, ""),
+    DATABASE_HOST=(str, ""),
+    DATABASE_PORT=(int, 5432),
+)
+
+environ.Env.read_env()
+
+ENVIRONMENT = env.str("ENVIRONMENT")
 # GENERAL
 # ------------------------------------------------------------------------------
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+# BASE_DIR = Path(__file__).resolve().parent.parent
 # https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-SECRET_KEY
-SECRET_KEY = '43)%4yx)aa@a=+_c(fn&kf3g29xax+=+a&key9i=!98zyim=8j'
+# SECRET_KEY = '43)%4yx)aa@a=+_c(fn&kf3g29xax+=+a&key9i=!98zyim=8j'
+SECRET_KEY = env.str("SECRET_KEY")
+
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
 DEBUG = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
@@ -85,10 +107,21 @@ TEMPLATES = [
 # DATABASES
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": env.str("DATABASE_ENGINE"),
+        "NAME": env.str("DATABASE_NAME"),
+        "USER": env.str("DATABASE_USER", ""),
+        "PASSWORD": env.str("DATABASE_PASSWORD", ""),
+        "HOST": env.str("DATABASE_HOST", ""),
+        "PORT": env.int("DATABASE_PORT", ""),
     }
 }
 
@@ -189,8 +222,8 @@ REST_FRAMEWORK = {
     ],
 }
 
-# CORS_ORIGIN_WHITELIST = tuple(env.list("ALLOWED_ORIGINS"))
-# CORS_ALLOW_ALL_ORIGINS = env.bool("ALLOW_ALL_ORIGINS")
+CORS_ORIGIN_WHITELIST = tuple(env.list("ALLOWED_ORIGINS"))
+CORS_ALLOW_ALL_ORIGINS = env.bool("ALLOW_ALL_ORIGINS")
 
 SIMPLE_JWT = {"ACCESS_TOKEN_LIFETIME": timedelta(seconds=60 * 60)}
 

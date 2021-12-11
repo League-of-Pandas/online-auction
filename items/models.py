@@ -7,8 +7,8 @@ from django.utils import timezone
 class Item(models.Model):
   item_name = models.CharField(max_length=64)
   # category = models.TextField(choices=)
-  # image = models.CharField(max_length=10000)
-  image = models.ImageField(upload_to='item_img/')
+  image = models.CharField(max_length=10000)
+  # image = models.ImageField(upload_to='item_img/')
   # image = models.ImageField()
   CATEGORY_CHOICES = [
     ("Vehicles", 'Vehicles'),
