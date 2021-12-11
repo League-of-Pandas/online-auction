@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import timedelta
 
 # GENERAL
 # ------------------------------------------------------------------------------
@@ -15,6 +16,7 @@ ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = [
+    # "whitenoise.runserver_nostatic",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,6 +45,7 @@ INSTALLED_APPS = [
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -174,3 +177,28 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
+
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.BasicAuthentication",
+    ],
+}
+
+# CORS_ORIGIN_WHITELIST = tuple(env.list("ALLOWED_ORIGINS"))
+# CORS_ALLOW_ALL_ORIGINS = env.bool("ALLOW_ALL_ORIGINS")
+
+SIMPLE_JWT = {"ACCESS_TOKEN_LIFETIME": timedelta(seconds=60 * 60)}
+
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# AWS_S3_SESSION_PROFILE = ''
+# AWS_S3_ACCESS_KEY_ID = ''
+# AWS_S3_SECRET_ACCESS_KEY = ''
+
+
+
+
