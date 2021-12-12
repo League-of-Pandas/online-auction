@@ -30,8 +30,8 @@ class Item(models.Model):
   owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
   bidder = models.ForeignKey(get_user_model(),related_name="bidder", blank=True, null=True,on_delete=models.DO_NOTHING)
 
-  start_data = models.DateTimeField(('start_data'), default=timezone.now)
-  end_data = models.DateTimeField(('end_data'), default=timezone.now)
+  start_date = models.DateTimeField(('start_date'), default=timezone.now)
+  end_date = models.DateTimeField(('end_date'), default=timezone.now)
   bidder_counter = models.IntegerField(default=0)
   favorite_counter=models.IntegerField(default=0)
   is_sold = models.BooleanField(default=False)
