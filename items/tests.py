@@ -24,8 +24,8 @@ class ItemModelTests(TestCase):
             image = 'image.jpg',
             category = 'Art',
             init_price = 100,
-            highest_bidder = 'unknown',
-            min_bid = 5,
+            highest_bidding = 5,
+            bid_increment = 5,
             bidder = user,
             start_date = '2021-12-14T14:09:00Z',
             end_date = '2021-12-28T14:09:00Z',
@@ -44,8 +44,8 @@ class ItemModelTests(TestCase):
 
         self.assertEqual(item.category,'Art')
         self.assertEqual(item.init_price,100)
-        self.assertEqual(item.highest_bidder,'unknown')
-        self.assertEqual(item.min_bid, 5)
+        self.assertEqual(item.highest_bidding,5)
+        self.assertEqual(item.bid_increment, 5)
         self.assertEqual(str(item.bidder),'tasneem')
         self.assertEqual(item.favorite_counter,4)
         self.assertEqual(item.bidder_counter,4)
@@ -73,8 +73,8 @@ class APITest(APITestCase):
             image = 'image.jpg',
             category = 'Art',
             init_price = 100,
-            highest_bidder = 'unknown',
-            min_bid = 5,
+            highest_bidding = 5,
+            bid_increment = 5,
             bidder = user,
             start_date = '2021-12-14T14:09:00Z',
             end_date = '2021-12-28T14:09:00Z',
@@ -95,7 +95,8 @@ class APITest(APITestCase):
             "image" : test_item.image,
             "category" : test_item.category,
             "init_price" : test_item.init_price,
-            "highest_bidder" : test_item.highest_bidder,
+            "highest_bidding" : test_item.highest_bidding,
+            "bid_increment": test_item.bid_increment,
             "start_date" : test_item.start_date,
             "end_date" : test_item.end_date,
             "bidder_counter" : test_item.bidder_counter,
@@ -103,11 +104,10 @@ class APITest(APITestCase):
             "is_sold": test_item.is_sold,
             "is_expirated": test_item.is_expirated,
             "bidder" : user.id,
-            "min_bid": test_item.min_bid,
     
         })
         
-
+class APITestCRUD(APITestCase):
     def test_create(self):
         user = get_user_model().objects.create_user(username='tasneem',password='pass')
         user.save()
@@ -115,20 +115,21 @@ class APITest(APITestCase):
         url = reverse('item_list')
         data = {      
             "owner" : user.id,
+            "bidder": user.id,
             "item_name" :"name",
-            "description" : "about the item",
             "image" : "image.jpg",
             "category" : "Art",
+            "description" : "about the item",
             "init_price" : 100,
-            "highest_bidder" : "unknown",
+            "highest_bidding" : 5,
+            "bid_increment": 5,
             "start_date" :'2021-12-14T14:09:00Z' ,
             "end_date" : '2021-12-28T14:09:00Z',
             "bidder_counter" : 4,
             "favorite_counter":4,
             "is_sold": False,
             "is_expirated": False,
-            "bidder" : user.id,
-            "min_bid": 5,
+            
         }
         
 
@@ -139,8 +140,7 @@ class APITest(APITestCase):
             status.HTTP_401_UNAUTHORIZED,
             (response.status_code, response.content)
         ) 
-
-
+        response = self.client.post(url, data, format='json')
 
         self.assertEqual(Item.objects.count(), 0)
         
@@ -155,8 +155,8 @@ class APITest(APITestCase):
             image = 'image.jpg',
             category = 'Art',
             init_price = 100,
-            highest_bidder = 'unknown',
-            min_bid = 5,
+            highest_bidding = 5,
+            bid_increment = 5,
             bidder = user,
             start_date = '2021-12-14T14:09:00Z',
             end_date = '2021-12-28T14:09:00Z',
@@ -176,15 +176,15 @@ class APITest(APITestCase):
             "image" : "image.jpg",
             "category" : "Art",
             "init_price" : 100,
-            "highest_bidder" : "unknown",
+            "highest_bidding" : 5,
             "start_date" :'2021-12-14T14:09:00Z' ,
             "end_date" : '2021-12-28T14:09:00Z',
             "bidder_counter" : 4,
             "favorite_counter":4,
             "is_sold": False,
             "is_expirated": False,
-            "bidder" : test_item.bidder.id,
-            "min_bid": 5,
+            "bidder" : user.id,
+            "bid_increment": 5,
         }
 
         response = self.client.put(url, data, format='json')
@@ -193,7 +193,44 @@ class APITest(APITestCase):
             status.HTTP_401_UNAUTHORIZED,
             (response.status_code, response.content)
         ) 
-   
+        
+    def test_delete(self):
+            """Test the api can delete a item."""
+
+            user = get_user_model().objects.create_user(username='tasneem',password='pass')
+            user.save()
+
+            test_item = Item.objects.create(
+                owner = user,
+                item_name = 'name',
+                description = 'about the item',
+                image = 'image.jpg',
+                category = 'Art',
+                init_price = 100,
+                highest_bidding = 5,
+                bid_increment = 5,
+                bidder = user,
+                start_date = '2021-12-14T14:09:00Z',
+                end_date = '2021-12-28T14:09:00Z',
+                bidder_counter = 4,
+                favorite_counter=4,
+                is_sold= False,
+                is_expirated= False
+            )
+
+            test_item.save()
+
+            item = Item.objects.get()
+
+            url = reverse('item_detail', kwargs={'pk': item.id})
 
 
-    
+            response = self.client.delete(url)
+            self.assertEqual(
+                response.status_code,
+                status.HTTP_401_UNAUTHORIZED,
+                (response.status_code, response.content)
+            ) 
+
+            
+        

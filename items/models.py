@@ -24,9 +24,9 @@ class Item(models.Model):
   
   description = models.TextField()
   init_price = models.IntegerField()
-  highest_bidder = models.CharField(max_length=64, blank=True, null=True)
+  highest_bidding = models.IntegerField(default=0)
 
-  min_bid = models.IntegerField(default=0)
+  bid_increment = models.IntegerField(default=0)
   owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
   bidder = models.ForeignKey(get_user_model(),related_name="bidder", blank=True, null=True,on_delete=models.DO_NOTHING)
 
