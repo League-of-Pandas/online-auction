@@ -14,6 +14,9 @@ class Item(models.Model):
     ("Vehicles", 'Vehicles'),
     ("Coins & Bullion", 'Coins & Bullion'),
     ("Art", 'Art'),
+    ("Furniture",'Furniture'),
+    ("Electronics",'Electronics'),
+    ("Jewelry",'Jewelry'),
     ]
   category = models.CharField(
     choices=CATEGORY_CHOICES,
@@ -25,8 +28,8 @@ class Item(models.Model):
   owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
   highest_bidder = models.CharField(max_length=64, blank=True, null=True)
 
-  start_data = models.DateTimeField(('start_data'), default=timezone.now)
-  end_data = models.DateTimeField(('end_data'), default=timezone.now)
+  start_date = models.DateTimeField(('start_date'), default=timezone.now)
+  end_date = models.DateTimeField(('end_date'), default=timezone.now)
   bidder_counter = models.IntegerField(default=0)
 
 # class Bodding(models.Model):

@@ -113,7 +113,7 @@ TEMPLATES = [
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-
+print(env("DATABASE_HOST", ""))
 DATABASES = {
     "default": {
         "ENGINE": env.str("DATABASE_ENGINE"),
