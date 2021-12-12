@@ -12,7 +12,7 @@ class ItemsList(ListCreateAPIView):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
 
-class ItemgDetail(RetrieveUpdateDestroyAPIView):
+class ItemDetail(RetrieveUpdateDestroyAPIView):
     permission_classes = (IsOwnerOrReadOnly,)
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
