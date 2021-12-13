@@ -1,8 +1,8 @@
 from rest_framework.generics import (
     ListCreateAPIView,
-    RetrieveUpdateDestroyAPIView,
+    RetrieveUpdateDestroyAPIView,RetrieveUpdateAPIView
 )
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
 from .models import Item
 from .serializers import ItemSerializer
 from .permissions import IsOwnerOrReadOnly
@@ -14,6 +14,6 @@ class ItemsList(ListCreateAPIView):
     serializer_class = ItemSerializer
 
 class ItemDetail(RetrieveUpdateDestroyAPIView):
-    permission_classes = (IsOwnerOrReadOnly,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
