@@ -135,3 +135,4 @@ class APIUserTest(APITestCase):
     #         response = self.client.delete(url)
     #         print(response.data)
     #         self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT, url)
+
