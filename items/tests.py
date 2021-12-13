@@ -133,7 +133,7 @@ class APITestCRUD(APITestCase):
         }
         
 
-
+        # test when the user is not authorized
         response = self.client.post(url, json=data)
         self.assertEqual(
             response.status_code,
@@ -144,11 +144,13 @@ class APITestCRUD(APITestCase):
 
         self.assertEqual(Item.objects.count(), 0)
 
-        
+        # Authorize the user then test the post method
         self.client.login(username='tasneem',password='123')
         response2 = self.client.post(url, data, format='json')
         
         self.assertEqual(response2.status_code, status.HTTP_201_CREATED, user.id)
+        self.assertEqual(Item.objects.count(), 1)
+        self.assertEqual(Item.objects.get().item_name, data['item_name'])
         
     def test_update(self):
         user = get_user_model().objects.create_user(username='tasneem',password='123')
@@ -192,18 +194,23 @@ class APITestCRUD(APITestCase):
             "bidder" : user.id,
             "bid_increment": 5,
         }
-
+        
+        # test when the user is not authorized
         response = self.client.put(url, data, format='json')
         self.assertEqual(
             response.status_code,
             status.HTTP_401_UNAUTHORIZED,
             (response.status_code, response.content)
         ) 
+        
+        # Authorize the user then test the put method
         self.client.login(username='tasneem',password='123')
 
         response2 = self.client.put(url, data, format='json')
     
         self.assertEqual(response2.status_code, status.HTTP_200_OK, url)
+        self.assertEqual(Item.objects.count(), 1)
+        self.assertEqual(Item.objects.get().item_name, data['item_name'])
         
     def test_delete(self):
             """Test the api can delete a item."""
@@ -236,7 +243,7 @@ class APITestCRUD(APITestCase):
             url = reverse('item_detail', kwargs={'pk': item.id})
 
             
-
+            # test when the user is not authorized
             response = self.client.delete(url)
             self.assertEqual(
                 response.status_code,
@@ -244,6 +251,7 @@ class APITestCRUD(APITestCase):
                 (response.status_code, response.content)
             ) 
 
+            # Authorize the user then test the delete method
             self.client.login(username='tasneem',password='123')
             response2 = self.client.delete(url)
             self.assertEquals(response2.status_code, status.HTTP_204_NO_CONTENT, url)
