@@ -1,6 +1,4 @@
 import datetime
-from typing import ItemsView
-from django import test
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
@@ -51,7 +49,8 @@ class ItemModelTests(TestCase):
         self.assertEqual(item.bidder_counter,4)
         self.assertEqual(item.is_sold, False)
         self.assertEqual(item.is_expirated,False)
-
+        
+      
 class APITest(APITestCase):
 
     def test_list(self):
@@ -84,7 +83,7 @@ class APITest(APITestCase):
             is_expirated= False
         )
         test_item.save()
-
+        
         response = self.client.get(reverse('item_detail', args=[1]))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, {
@@ -108,8 +107,9 @@ class APITest(APITestCase):
         })
         
 class APITestCRUD(APITestCase):
+    
     def test_create(self):
-        user = get_user_model().objects.create_user(username='tasneem',password='pass')
+        user = get_user_model().objects.create_user(username='tasneem',password='123')
         user.save()
         
         url = reverse('item_list')
@@ -143,9 +143,15 @@ class APITestCRUD(APITestCase):
         response = self.client.post(url, data, format='json')
 
         self.assertEqual(Item.objects.count(), 0)
+
+        
+        self.client.login(username='tasneem',password='123')
+        response2 = self.client.post(url, data, format='json')
+        
+        self.assertEqual(response2.status_code, status.HTTP_201_CREATED, user.id)
         
     def test_update(self):
-        user = get_user_model().objects.create_user(username='tasneem',password='pass')
+        user = get_user_model().objects.create_user(username='tasneem',password='123')
         user.save()
 
         test_item = Item.objects.create(
@@ -193,11 +199,16 @@ class APITestCRUD(APITestCase):
             status.HTTP_401_UNAUTHORIZED,
             (response.status_code, response.content)
         ) 
+        self.client.login(username='tasneem',password='123')
+
+        response2 = self.client.put(url, data, format='json')
+    
+        self.assertEqual(response2.status_code, status.HTTP_200_OK, url)
         
     def test_delete(self):
             """Test the api can delete a item."""
 
-            user = get_user_model().objects.create_user(username='tasneem',password='pass')
+            user = get_user_model().objects.create_user(username='tasneem',password='123')
             user.save()
 
             test_item = Item.objects.create(
@@ -224,6 +235,7 @@ class APITestCRUD(APITestCase):
 
             url = reverse('item_detail', kwargs={'pk': item.id})
 
+            
 
             response = self.client.delete(url)
             self.assertEqual(
@@ -231,6 +243,10 @@ class APITestCRUD(APITestCase):
                 status.HTTP_401_UNAUTHORIZED,
                 (response.status_code, response.content)
             ) 
+
+            self.client.login(username='tasneem',password='123')
+            response2 = self.client.delete(url)
+            self.assertEquals(response2.status_code, status.HTTP_204_NO_CONTENT, url)
 
             
         
