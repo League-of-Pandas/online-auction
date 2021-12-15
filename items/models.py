@@ -32,9 +32,10 @@ class Item(models.Model):
   bidder_counter = models.IntegerField(default=0)
   favorite_counter=models.IntegerField(default=0)
   is_sold = models.BooleanField(default=False)
-  is_expirated = models.BooleanField(default=False)
 
-  
 class Bidders(models.Model):
   user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE ,blank=True, null=True)
   product = models.ForeignKey(Item,on_delete=models.CASCADE ,blank=True, null=True)
+  
+
+
