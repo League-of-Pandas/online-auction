@@ -9,6 +9,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('user/', include('accounts.urls')),
     path("api/v1/items/", include("items.urls")),
+    # path("bidders/", include("items.urls")),
     path("api-auth/", include("rest_framework.urls")),
     path(
         "api/token/",
