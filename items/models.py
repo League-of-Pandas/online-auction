@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-from django.contrib.postgres.fields import ArrayField
 # Create your models here.
 
 class Item(models.Model):
@@ -32,8 +31,6 @@ class Item(models.Model):
   bidder_counter = models.IntegerField(default=0)
   favorite_counter=models.IntegerField(default=0)
   is_sold = models.BooleanField(default=False)
-  is_expirated = models.BooleanField(default=False)
-
   
 class Bidders(models.Model):
   user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE ,blank=True, null=True)
