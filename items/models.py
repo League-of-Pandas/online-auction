@@ -35,3 +35,6 @@ class Item(models.Model):
 class Bidders(models.Model):
   user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE ,blank=True, null=True)
   product = models.ForeignKey(Item,on_delete=models.CASCADE ,blank=True, null=True)
+  
+
+

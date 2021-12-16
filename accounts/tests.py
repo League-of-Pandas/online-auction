@@ -53,11 +53,29 @@ class APIUserTest(APITestCase):
             number= '1223447',
         )
         test_item.save()
-
-    def test_user_post(self):
-        user = get_user_model().objects.create_user(username='tahany',password='0000')
-        user.save()
         
+    def test_detail(self):
+            user = CustomUser.objects.create(
+            is_superuser= True,
+            username= "tahany",
+            first_name= "tahany",
+            last_name= "ali",
+            email= "tahany@admin.com",
+            is_staff= True,
+            is_active= True,
+            date_joined= "2021-12-12T12:04:50.450159Z",
+            location= 'location',
+            number= '1223447',
+            password='pass'
+        )
+            user.save()
+            response = self.client.get(reverse("user_detail", args=[user.id]))
+            self.assertEqual(response.status_code, status.HTTP_200_OK)   
+            
+class APIUserTestCRUD(APITestCase):
+ 
+        
+    def test_user_post(self):
         url = reverse('user_list')
         data = {
             "is_superuser" : True,
@@ -74,7 +92,7 @@ class APIUserTest(APITestCase):
         }
         
         response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, user.id)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 
     def test_user_update(self):
