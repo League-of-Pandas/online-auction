@@ -32,7 +32,7 @@ SECRET_KEY = env.str("SECRET_KEY")
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
 DEBUG = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
+ALLOWED_HOSTS = tuple(env.list('ALLOWED_HOSTS'))
 
 # APPS
 # ------------------------------------------------------------------------------
@@ -107,25 +107,25 @@ TEMPLATES = [
 # DATABASES
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 # print(env("DATABASE_HOST", ""))
 
 # print(env("DATABASE_HOST", ""))
-# DATABASES = {
-#     "default": {
-#         "ENGINE": env.str("DATABASE_ENGINE"),
-#         "NAME": env.str("DATABASE_NAME"),
-#         "USER": env.str("DATABASE_USER", ""),
-#         "PASSWORD": env.str("DATABASE_PASSWORD", ""),
-#         "HOST": env.str("DATABASE_HOST", ""),
-#         "PORT": env.int("DATABASE_PORT", ""),
-#     }
-# }
+DATABASES = {
+    "default": {
+        "ENGINE": env.str("DATABASE_ENGINE"),
+        "NAME": env.str("DATABASE_NAME"),
+        "USER": env.str("DATABASE_USER", ""),
+        "PASSWORD": env.str("DATABASE_PASSWORD", ""),
+        "HOST": env.str("DATABASE_HOST", ""),
+        "PORT": env.int("DATABASE_PORT", ""),
+    }
+}
 
 # PASSWORDS
 # ------------------------------------------------------------------------------

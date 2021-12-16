@@ -76,6 +76,7 @@ class APIUserTest(APITestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, user.id)
 
+
     def test_user_update(self):
         user = CustomUser.objects.create(
             is_superuser= True,
@@ -127,4 +128,5 @@ class APIUserTest(APITestCase):
             url = reverse('user_detail', kwargs={'pk': item.id})
             response = self.client.delete(url)
             self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT, url)
+
 

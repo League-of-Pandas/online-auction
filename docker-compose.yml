@@ -8,13 +8,3 @@ services:
       - .:/code
     ports:
       - 8000:8000
-  db: 
-    image: postgres:11
-    volumes:
-      - ./postgres-data:/var/lib/postgressql  
-      - ./dbbackups:/backups
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    ports:
-      - 25432:5432
