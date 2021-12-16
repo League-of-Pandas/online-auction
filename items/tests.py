@@ -242,10 +242,10 @@ class APITestCRUD(APITestCase):
                 status.HTTP_401_UNAUTHORIZED,
                 (response.status_code, response.content)
             )
-
-            self.client.login(username='tester',password='pass')
-            response = self.client.delete(url)
-            # self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT, url)
+            
+            self.client.login(username='tasneem',password='123')
+            response2 = self.client.delete(url)
+            self.assertEquals(response2.status_code, status.HTTP_204_NO_CONTENT, url)
 
 class APITestBidderCRUD(APITestCase):
     """
@@ -280,5 +280,87 @@ class APITestBidderCRUD(APITestCase):
         response = self.client.post(urlBidders, dateBidder, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, userBidder.id)
+    
+    def test_delete(self):
+        userOwner = get_user_model().objects.create_user(username='tasneem',password='123')
+        userOwner.save()
+        
+        test_item = Item.objects.create(
+                owner = userOwner,
+                item_name = 'name',
+                description = 'about the item',
+                image = 'image.jpg',
+                category = 'Art',
+                init_price = 100,
+                highest_bidding = 120,
+                bid_increment = 5,
+                start_date = '2021-12-13T14:09:00Z',
+                end_date = '2021-12-15T14:09:00Z',
+                bidder_counter = 4,
+                favorite_counter=4,
+                is_sold= True,
+            )
+        
+        test_bidder=Bidders.objects.create(
+            user= userOwner,
+            product= test_item)
+
+        test_bidder.save()
+        bidder = Bidders.objects.get()
+        url = reverse('bidders_detail', kwargs={'pk': bidder.id})
+        
+        response = self.client.delete(url)
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_401_UNAUTHORIZED,
+            (response.status_code, response.content)
+        )
+
+        self.client.login(username='tasneem',password='123')
+        response2 = self.client.delete(url)
+        self.assertEquals(response2.status_code, status.HTTP_204_NO_CONTENT, url)    
+    
+    def test_update(self):
+        userOwner = get_user_model().objects.create_user(username='tasneem',password='123')
+        userOwner.save()
+        userBidder = get_user_model().objects.create_user(username='bidder',password='pass')
+        userBidder.save()
+        
+        test_item = Item.objects.create(
+                owner = userOwner,
+                item_name = 'name',
+                description = 'about the item',
+                image = 'image.jpg',
+                category = 'Art',
+                init_price = 100,
+                highest_bidding = 120,
+                bid_increment = 5,
+                start_date = '2021-12-13T14:09:00Z',
+                end_date = '2021-12-15T14:09:00Z',
+                bidder_counter = 4,
+                favorite_counter=4,
+                is_sold= True,
+            )
+        
+        test_bidder=Bidders.objects.create(
+            user= userOwner,
+            product= test_item)
+        
+        test_bidder.save()
+        
+        
+
+        url = reverse('bidders_detail',args=[test_bidder.id])
+        data = {
+            "user" : userOwner.id,
+            "Product": userBidder.id,
+        }
+        self.client.login(username='tasneem',password='123')
+        response = self.client.put(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, url)
+
+        self.assertEqual(Bidders.objects.count(), test_bidder.id)
+        self.assertEqual(Bidders.objects.get().product.id, 1)    
 
     
